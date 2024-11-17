@@ -44,7 +44,7 @@ pub fn spawn_selector(
         SpriteBundle {
             texture: asset_server.load("selector.png"),
             transform: Transform::from_xyz(
-                SELECTOR_BOUNDS_X_MIN - 10.,
+                SELECTOR_BOUNDS_X_MIN - 8.,
                 SELECTOR_BOUNDS_Y_MIN - 8.,
                 2.,
             ),
