@@ -1,0 +1,32 @@
+[package]
+name = "simple-retro-td"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+rand = "0.8.5"
+
+[dependencies.bevy]
+version = "0.14.0"
+features = [
+    "bevy_asset",
+    "bevy_audio",
+    "bevy_winit",
+    "bevy_core_pipeline",
+    "bevy_sprite",
+    "bevy_text",
+    "bevy_ui",
+    "multi_threaded",
+    "png",
+    "vorbis",
+    "x11",
+    "file_watcher",
+    "default_font",
+    "webgl2",
+]
+
+[workspace]
+resolver = "2"
+
+[profile.dev.package."*"]
+opt-level = 3
