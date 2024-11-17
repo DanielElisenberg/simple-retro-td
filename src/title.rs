@@ -4,12 +4,16 @@ use bevy::{
     input::ButtonInput,
     prelude::{
         in_state, Commands, IntoSystemConfigs, KeyCode, NextState, OnEnter,
-        OnExit, Res, ResMut,
+        OnExit, Res, ResMut, Transform,
     },
     sprite::SpriteBundle,
 };
 
-use crate::{common::despawn_screen, GameState, OnTitleScreen};
+use crate::{
+    common::despawn_screen,
+    constants::{SCREEN_SIZE_X, SCREEN_SIZE_Y},
+    GameState, OnTitleScreen,
+};
 
 pub fn plugin(app: &mut App) {
     app.add_systems(OnEnter(GameState::Title), setup_system)
@@ -21,6 +25,11 @@ fn setup_system(mut commands: Commands, asset_server: Res<AssetServer>) {
     commands.spawn((
         SpriteBundle {
             texture: asset_server.load("title_screen.png"),
+            transform: Transform::from_xyz(
+                SCREEN_SIZE_X / 2. - 1.,
+                SCREEN_SIZE_Y / 2.,
+                0.,
+            ),
             ..Default::default()
         },
         OnTitleScreen,

@@ -1,4 +1,12 @@
 pub const TILE_SIZE: f32 = 16.;
 
+pub const SCALE: f32 = 2.;
 pub const SCREEN_SIZE_X: f32 = TILE_SIZE * 11.;
 pub const SCREEN_SIZE_Y: f32 = TILE_SIZE * 13.;
+pub const SCALED_SCREEN_SIZE_X: f32 = SCREEN_SIZE_X * SCALE;
+pub const SCALED_SCREEN_SIZE_Y: f32 = SCREEN_SIZE_Y * SCALE;
+
+pub const SELECTOR_BOUNDS_X_MIN: f32 = TILE_SIZE * 2.;
+pub const SELECTOR_BOUNDS_X_MAX: f32 = TILE_SIZE * 9.;
+pub const SELECTOR_BOUNDS_Y_MIN: f32 = TILE_SIZE * 3.;
+pub const SELECTOR_BOUNDS_Y_MAX: f32 = TILE_SIZE * 10.;
