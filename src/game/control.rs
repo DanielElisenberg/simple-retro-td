@@ -43,7 +43,11 @@ pub fn spawn_selector(
     commands.spawn((
         SpriteBundle {
             texture: asset_server.load("selector.png"),
-            transform: Transform::from_xyz(6., 8., 2.),
+            transform: Transform::from_xyz(
+                SELECTOR_BOUNDS_X_MIN - 10.,
+                SELECTOR_BOUNDS_Y_MIN - 8.,
+                2.,
+            ),
             ..Default::default()
         },
         OnGameScreen,
