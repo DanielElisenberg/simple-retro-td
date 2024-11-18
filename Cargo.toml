@@ -4,6 +4,7 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+bevy_embedded_assets = "0.11.0"
 rand = "0.8.5"
 
 [dependencies.bevy]
@@ -20,7 +21,6 @@ features = [
     "png",
     "vorbis",
     "x11",
-    "file_watcher",
     "default_font",
     "webgl2",
 ]
@@ -30,3 +30,7 @@ resolver = "2"
 
 [profile.dev.package."*"]
 opt-level = 3
+
+[target.wasm32-unknown-unknown]
+runner = "wasm-server-runner"
+

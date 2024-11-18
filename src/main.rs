@@ -4,6 +4,7 @@ mod game;
 mod title;
 
 use bevy::prelude::*;
+use bevy_embedded_assets::EmbeddedAssetPlugin;
 use constants::{
     SCALE, SCALED_SCREEN_SIZE_X, SCALED_SCREEN_SIZE_Y, SCREEN_SIZE_X,
     SCREEN_SIZE_Y,
@@ -19,7 +20,8 @@ enum GameState {
 fn main() {
     App::new()
         .insert_resource(ClearColor(Color::srgb(0.04, 0.04, 0.04)))
-        .add_plugins(
+        .add_plugins((
+            EmbeddedAssetPlugin::default(),
             DefaultPlugins
                 .set(WindowPlugin {
                     primary_window: Some(Window {
@@ -35,7 +37,7 @@ fn main() {
                     ..Default::default()
                 })
                 .set(ImagePlugin::default_nearest()),
-        )
+        ))
         .add_systems(Startup, setup)
         .init_state::<GameState>()
         .add_plugins((game::plugin, title::plugin))
