@@ -7,11 +7,14 @@ use bevy::{
 
 use crate::{
     constants::{self, SELECTOR_BOUNDS_X_MIN, SELECTOR_BOUNDS_Y_MIN},
-    game::components::Selector,
-    OnGameScreen,
+    game::components::{OnGameScreen, Selector},
 };
 
+use super::towers;
+
 pub fn move_selector(
+    mut commands: Commands,
+    asset_server: Res<AssetServer>,
     input: Res<ButtonInput<KeyCode>>,
     mut selector_query: Query<&mut Transform, With<Selector>>,
 ) {
@@ -33,6 +36,12 @@ pub fn move_selector(
         && selector_transform.translation.y > constants::SELECTOR_BOUNDS_Y_MIN
     {
         selector_transform.translation.y -= 16.
+    } else if input.just_pressed(KeyCode::KeyA) {
+        towers::spawn_tower(
+            &mut commands,
+            &asset_server,
+            selector_transform.clone(),
+        )
     }
 }
 

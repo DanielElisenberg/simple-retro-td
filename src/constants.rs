@@ -1,6 +1,6 @@
 pub const TILE_SIZE: f32 = 16.;
 
-pub const SCALE: f32 = 2.;
+pub const SCALE: f32 = 4.;
 pub const SCREEN_SIZE_X: f32 = TILE_SIZE * 11.;
 pub const SCREEN_SIZE_Y: f32 = TILE_SIZE * 13.;
 pub const SCALED_SCREEN_SIZE_X: f32 = SCREEN_SIZE_X * SCALE;

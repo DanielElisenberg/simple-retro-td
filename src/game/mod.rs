@@ -16,9 +16,10 @@ use bevy::{
 };
 
 use crate::{
-    common::despawn_screen,
+    common::despawn_all,
     constants::{SCREEN_SIZE_X, SCREEN_SIZE_Y},
-    GameState, OnGameScreen,
+    game::components::OnGameScreen,
+    GameState,
 };
 
 pub fn plugin(app: &mut App) {
@@ -28,7 +29,7 @@ pub fn plugin(app: &mut App) {
             (change_scene, control::move_selector)
                 .run_if(in_state(GameState::Game)),
         )
-        .add_systems(OnExit(GameState::Game), despawn_screen::<OnGameScreen>);
+        .add_systems(OnExit(GameState::Game), despawn_all::<OnGameScreen>);
 }
 
 fn setup_system(mut commands: Commands, asset_server: Res<AssetServer>) {

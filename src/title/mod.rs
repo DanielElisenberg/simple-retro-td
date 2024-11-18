@@ -1,3 +1,5 @@
+mod components;
+
 use bevy::{
     app::{App, Update},
     asset::AssetServer,
@@ -10,15 +12,16 @@ use bevy::{
 };
 
 use crate::{
-    common::despawn_screen,
+    common::despawn_all,
     constants::{SCREEN_SIZE_X, SCREEN_SIZE_Y},
-    GameState, OnTitleScreen,
+    title::components::OnTitleScreen,
+    GameState,
 };
 
 pub fn plugin(app: &mut App) {
     app.add_systems(OnEnter(GameState::Title), setup_system)
         .add_systems(Update, change_scene.run_if(in_state(GameState::Title)))
-        .add_systems(OnExit(GameState::Title), despawn_screen::<OnTitleScreen>);
+        .add_systems(OnExit(GameState::Title), despawn_all::<OnTitleScreen>);
 }
 
 fn setup_system(mut commands: Commands, asset_server: Res<AssetServer>) {

@@ -16,12 +16,6 @@ enum GameState {
     Title,
 }
 
-#[derive(Component)]
-struct OnGameScreen;
-
-#[derive(Component)]
-struct OnTitleScreen;
-
 fn main() {
     App::new()
         .insert_resource(ClearColor(Color::srgb(0.04, 0.04, 0.04)))
