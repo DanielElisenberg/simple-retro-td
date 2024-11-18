@@ -2,7 +2,6 @@ use bevy::{
     asset::AssetServer,
     prelude::{Commands, Res, Transform},
     sprite::SpriteBundle,
-    time::{Timer, TimerMode},
 };
 
 use crate::game::components::{OnGameScreen, Tower};
@@ -18,9 +17,7 @@ pub fn spawn_tower(
             transform: position,
             ..Default::default()
         },
-        Tower {
-            time_out: Timer::from_seconds(0.5, TimerMode::Once),
-        },
+        Tower,
         OnGameScreen,
     ));
 }
