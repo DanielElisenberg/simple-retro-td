@@ -14,7 +14,7 @@ use crate::game::{
         AnimationIndices, AnimationTimer, Enemy, EnemySpawner, OnGameScreen,
     },
     levels::{get_enemy_config_for_level, LevelConfig},
-    resources::Life,
+    resources::Player,
 };
 
 const ENEMY_PATH: [Vec2; 11] = [
@@ -33,7 +33,7 @@ const ENEMY_PATH: [Vec2; 11] = [
 
 pub fn move_enemy(
     mut commands: Commands,
-    mut life: ResMut<Life>,
+    mut player: ResMut<Player>,
     mut query: Query<(Entity, &mut Transform, &mut Enemy)>,
     time: Res<Time>,
 ) {
@@ -45,7 +45,7 @@ pub fn move_enemy(
         if distance < 0.5 {
             enemy.on_step += 1;
             if enemy.on_step == ENEMY_PATH.len() {
-                life.0 = life.0.saturating_sub(1);
+                player.life = player.life.saturating_sub(1);
                 commands.entity(entity).despawn_recursive();
             }
         } else {

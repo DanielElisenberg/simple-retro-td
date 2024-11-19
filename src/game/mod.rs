@@ -26,7 +26,10 @@ use crate::{
 
 pub fn plugin(app: &mut App) {
     app.add_systems(OnEnter(GameState::Game), setup_system)
-        .insert_resource(resources::Life(30))
+        .insert_resource(resources::Player {
+            life: 30,
+            money: 30,
+        })
         .add_systems(
             Update,
             (
@@ -61,10 +64,10 @@ fn setup_system(mut commands: Commands, asset_server: Res<AssetServer>) {
 }
 
 fn check_life(
-    life: ResMut<resources::Life>,
+    player: ResMut<resources::Player>,
     mut game_state: ResMut<NextState<GameState>>,
 ) {
-    if life.0 == 0 {
+    if player.life == 0 {
         game_state.set(GameState::Title);
     }
 }
