@@ -3,6 +3,7 @@ mod control;
 mod levels;
 mod mobs;
 mod projectiles;
+mod resources;
 mod towers;
 
 use bevy::{
@@ -25,10 +26,12 @@ use crate::{
 
 pub fn plugin(app: &mut App) {
     app.add_systems(OnEnter(GameState::Game), setup_system)
+        .insert_resource(resources::Life(30))
         .add_systems(
             Update,
             (
                 change_scene,
+                check_life,
                 control::move_selector,
                 mobs::ysort_enemies,
                 mobs::move_enemy,
@@ -55,6 +58,15 @@ fn setup_system(mut commands: Commands, asset_server: Res<AssetServer>) {
     ));
     control::spawn_selector(&mut commands, &asset_server);
     mobs::init_enemy_spawner(&mut commands);
+}
+
+fn check_life(
+    life: ResMut<resources::Life>,
+    mut game_state: ResMut<NextState<GameState>>,
+) {
+    if life.0 == 0 {
+        game_state.set(GameState::Title);
+    }
 }
 
 fn change_scene(
