@@ -138,6 +138,7 @@ pub fn spawn_enemy(
             on_step: 0,
             health: enemy_config.mob_health,
             speed: enemy_config.mob_speed,
+            debufs: Vec::new(),
         },
     ));
 }

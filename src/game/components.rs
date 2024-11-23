@@ -1,4 +1,7 @@
-use bevy::{prelude::Component, time::Timer};
+use bevy::{
+    prelude::{Component, Entity},
+    time::Timer,
+};
 
 #[derive(Component)]
 pub struct Selector;
@@ -15,6 +18,7 @@ pub enum TowerType {
 #[derive(Component)]
 pub struct Tower {
     pub tower_type: TowerType,
+    pub reload: Timer,
 }
 
 #[derive(Component)]
@@ -30,6 +34,7 @@ pub struct Enemy {
     pub on_step: usize,
     pub health: u8,
     pub speed: f32,
+    pub debufs: Vec<Debuf>,
 }
 
 #[derive(Component)]
@@ -40,3 +45,26 @@ pub struct AnimationIndices {
 
 #[derive(Component)]
 pub struct AnimationTimer(pub Timer);
+
+#[derive(Component)]
+pub struct Bullet {
+    pub target: Entity,
+    pub bullet_type: BulletType,
+}
+
+#[derive(PartialEq, Clone, Debug)]
+pub enum DebufEffect {
+    Frozen,
+}
+
+#[derive(Component, PartialEq, Clone, Debug)]
+pub struct Debuf {
+    pub effect: DebufEffect,
+    pub duration: Timer,
+}
+
+pub enum BulletType {
+    Arrow,
+    Cannonball,
+    Ice,
+}

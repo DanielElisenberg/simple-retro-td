@@ -41,6 +41,8 @@ pub fn plugin(app: &mut App) {
                 mobs::spawn_enemies_from_spawner,
                 mobs::animate_enemy,
                 towers::animate_towers,
+                towers::shoot_from_tower,
+                projectiles::move_bullet_to_target,
             )
                 .run_if(in_state(GameState::Game)),
         )
