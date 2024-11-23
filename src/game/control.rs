@@ -1,19 +1,21 @@
 use bevy::{
-    asset::AssetServer,
+    asset::{AssetServer, Assets},
     input::ButtonInput,
-    prelude::{Commands, KeyCode, Query, Res, Transform, With},
-    sprite::SpriteBundle,
+    prelude::{Commands, KeyCode, Query, Res, ResMut, Transform, With},
+    sprite::{SpriteBundle, TextureAtlasLayout},
 };
 
 use crate::{
     constants::{self, SELECTOR_BOUNDS_X_MIN, SELECTOR_BOUNDS_Y_MIN},
-    game::components::{OnGameScreen, Selector},
+    game::{
+        components::{OnGameScreen, Selector, TowerType},
+        towers,
+    },
 };
-
-use super::towers;
 
 pub fn move_selector(
     mut commands: Commands,
+    texture_atlas_layouts: ResMut<Assets<TextureAtlasLayout>>,
     asset_server: Res<AssetServer>,
     input: Res<ButtonInput<KeyCode>>,
     mut selector_query: Query<&mut Transform, With<Selector>>,
@@ -23,25 +25,43 @@ pub fn move_selector(
     if input.just_pressed(KeyCode::ArrowLeft)
         && selector_transform.translation.x > constants::SELECTOR_BOUNDS_X_MIN
     {
-        selector_transform.translation.x -= 16.
+        selector_transform.translation.x -= 16.;
     } else if input.just_pressed(KeyCode::ArrowRight)
         && selector_transform.translation.x < constants::SELECTOR_BOUNDS_X_MAX
     {
-        selector_transform.translation.x += 16.
+        selector_transform.translation.x += 16.;
     } else if input.just_pressed(KeyCode::ArrowUp)
         && selector_transform.translation.y < constants::SELECTOR_BOUNDS_Y_MAX
     {
-        selector_transform.translation.y += 16.
+        selector_transform.translation.y += 16.;
     } else if input.just_pressed(KeyCode::ArrowDown)
         && selector_transform.translation.y > constants::SELECTOR_BOUNDS_Y_MIN
     {
-        selector_transform.translation.y -= 16.
+        selector_transform.translation.y -= 16.;
+    } else if input.just_pressed(KeyCode::KeyI) {
+        towers::spawn_tower(
+            &mut commands,
+            texture_atlas_layouts,
+            &asset_server,
+            selector_transform.clone(),
+            TowerType::Ice,
+        );
+    } else if input.just_pressed(KeyCode::KeyC) {
+        towers::spawn_tower(
+            &mut commands,
+            texture_atlas_layouts,
+            &asset_server,
+            selector_transform.clone(),
+            TowerType::Cannon,
+        );
     } else if input.just_pressed(KeyCode::KeyA) {
         towers::spawn_tower(
             &mut commands,
+            texture_atlas_layouts,
             &asset_server,
             selector_transform.clone(),
-        )
+            TowerType::Arrow,
+        );
     }
 }
 

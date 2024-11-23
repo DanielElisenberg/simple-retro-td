@@ -40,10 +40,14 @@ pub fn plugin(app: &mut App) {
                 mobs::move_enemy,
                 mobs::spawn_enemies_from_spawner,
                 mobs::animate_enemy,
+                towers::animate_towers,
             )
                 .run_if(in_state(GameState::Game)),
         )
-        .add_systems(OnExit(GameState::Game), despawn_all::<OnGameScreen>);
+        .add_systems(
+            OnExit(GameState::Game),
+            (despawn_all::<OnGameScreen>, cleanup),
+        );
 }
 
 fn setup_system(mut commands: Commands, asset_server: Res<AssetServer>) {
@@ -79,4 +83,9 @@ fn change_scene(
     if keys.just_pressed(KeyCode::Space) {
         game_state.set(GameState::Title)
     }
+}
+
+fn cleanup(mut player: ResMut<resources::Player>) {
+    player.life = 30;
+    player.money = 30;
 }

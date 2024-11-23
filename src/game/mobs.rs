@@ -144,11 +144,10 @@ pub fn spawn_enemy(
 
 pub fn animate_enemy(
     time: Res<Time>,
-    mut query: Query<(
-        &AnimationIndices,
-        &mut AnimationTimer,
-        &mut TextureAtlas,
-    )>,
+    mut query: Query<
+        (&AnimationIndices, &mut AnimationTimer, &mut TextureAtlas),
+        With<Enemy>,
+    >,
 ) {
     for (indices, mut timer, mut atlas) in &mut query {
         timer.0.tick(time.delta());

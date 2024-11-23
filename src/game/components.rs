@@ -6,8 +6,16 @@ pub struct Selector;
 #[derive(Component)]
 pub struct OnGameScreen;
 
+pub enum TowerType {
+    Ice,
+    Cannon,
+    Arrow,
+}
+
 #[derive(Component)]
-pub struct Tower;
+pub struct Tower {
+    pub tower_type: TowerType,
+}
 
 #[derive(Component)]
 pub struct EnemySpawner {
