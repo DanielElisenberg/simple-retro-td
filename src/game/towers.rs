@@ -1,5 +1,6 @@
 use bevy::{
     asset::{AssetServer, Assets},
+    audio::{AudioBundle, PlaybackMode, PlaybackSettings, Volume},
     math::{UVec2, Vec3},
     prelude::{default, Commands, Entity, Query, Res, ResMut, Transform, With},
     sprite::{SpriteBundle, TextureAtlas, TextureAtlasLayout},
@@ -138,6 +139,14 @@ pub fn shoot_from_tower(
                         TowerType::Ice => BulletType::Ice,
                     },
                 );
+                commands.spawn(AudioBundle {
+                    source: asset_server.load("audio/fire.mp3"),
+                    settings: PlaybackSettings {
+                        mode: PlaybackMode::Once,
+                        volume: Volume::new(0.5),
+                        ..default()
+                    },
+                });
                 tower.reload.reset();
             }
         }
