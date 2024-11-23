@@ -22,7 +22,7 @@ pub struct Tower {
 }
 
 #[derive(Component)]
-pub struct EnemySpawner {
+pub struct MobSpawner {
     pub spawn_timer: Timer,
     pub spawn_counter: i32,
     pub level_timer: Timer,
@@ -30,7 +30,7 @@ pub struct EnemySpawner {
 }
 
 #[derive(Component, Clone, Debug)]
-pub struct Enemy {
+pub struct Mob {
     pub on_step: usize,
     pub health: u8,
     pub speed: f32,

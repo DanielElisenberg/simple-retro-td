@@ -5,7 +5,7 @@ pub struct LevelConfig {
     pub mob_speed: f32,
 }
 
-pub fn get_enemy_config_for_level(level: usize) -> LevelConfig {
+pub fn get_config_for_level(level: usize) -> LevelConfig {
     let clamped_level = if level > 5 { 5 } else { level };
     Vec::from([
         LevelConfig {

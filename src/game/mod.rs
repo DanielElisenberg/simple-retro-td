@@ -36,10 +36,10 @@ pub fn plugin(app: &mut App) {
                 change_scene,
                 check_life,
                 control::move_selector,
-                mobs::ysort_enemies,
-                mobs::move_enemy,
-                mobs::spawn_enemies_from_spawner,
-                mobs::animate_enemy,
+                mobs::ysort_mobs,
+                mobs::move_mobs,
+                mobs::spawn_mobs_from_spawner,
+                mobs::animate_mobs,
                 towers::animate_towers,
                 towers::shoot_from_tower,
                 projectiles::move_bullet_to_target,
@@ -66,7 +66,7 @@ fn setup_system(mut commands: Commands, asset_server: Res<AssetServer>) {
         OnGameScreen,
     ));
     control::spawn_selector(&mut commands, &asset_server);
-    mobs::init_enemy_spawner(&mut commands);
+    mobs::init_mob_spawner(&mut commands);
 }
 
 fn check_life(

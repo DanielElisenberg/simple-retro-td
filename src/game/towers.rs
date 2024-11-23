@@ -8,8 +8,8 @@ use bevy::{
 
 use crate::game::{
     components::{
-        AnimationIndices, AnimationTimer, BulletType, Enemy, OnGameScreen,
-        Tower, TowerType,
+        AnimationIndices, AnimationTimer, BulletType, Mob, OnGameScreen, Tower,
+        TowerType,
     },
     projectiles,
 };
@@ -106,27 +106,27 @@ pub fn shoot_from_tower(
     mut commands: Commands,
     asset_server: Res<AssetServer>,
     mut towers: Query<(&mut Tower, &Transform), With<Tower>>,
-    enemies: Query<(Entity, &Transform), With<Enemy>>,
+    mobs: Query<(Entity, &Transform), With<Mob>>,
     time: Res<Time>,
 ) {
     for (mut tower, tower_transform) in towers.iter_mut() {
         tower.reload.tick(time.delta());
         if tower.reload.finished() {
             let mut smallest_distance = f32::MAX;
-            let mut enemy_target: Option<Entity> = None;
-            for (enemy, enemy_transform) in enemies.iter() {
+            let mut mob_target: Option<Entity> = None;
+            for (mob, mob_transform) in mobs.iter() {
                 let distance_to =
                     tower_transform.translation.distance(Vec3::new(
-                        enemy_transform.translation.x,
-                        enemy_transform.translation.y,
+                        mob_transform.translation.x,
+                        mob_transform.translation.y,
                         tower_transform.translation.z,
                     ));
                 if distance_to < 32. && distance_to < smallest_distance {
                     smallest_distance = distance_to;
-                    enemy_target = Some(enemy);
+                    mob_target = Some(mob);
                 }
             }
-            if let Some(valid_target) = enemy_target {
+            if let Some(valid_target) = mob_target {
                 projectiles::spawn_bullet(
                     &mut commands,
                     &asset_server,

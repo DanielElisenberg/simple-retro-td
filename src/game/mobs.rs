@@ -11,13 +11,13 @@ use bevy::{
 
 use crate::game::{
     components::{
-        AnimationIndices, AnimationTimer, Enemy, EnemySpawner, OnGameScreen,
+        AnimationIndices, AnimationTimer, Mob, MobSpawner, OnGameScreen,
     },
-    levels::{get_enemy_config_for_level, LevelConfig},
+    levels::{get_config_for_level, LevelConfig},
     resources::Player,
 };
 
-const ENEMY_PATH: [Vec2; 11] = [
+const MOB_PATH: [Vec2; 11] = [
     Vec2::new(5. * 16. + 8., 9. * 16. + 8.),
     Vec2::new(8. * 16. + 8., 9. * 16. + 8.),
     Vec2::new(8. * 16. + 8., 2. * 16. + 8.),
@@ -31,42 +31,42 @@ const ENEMY_PATH: [Vec2; 11] = [
     Vec2::new(3. * 16. + 8., 10. * 16. + 8.),
 ];
 
-pub fn move_enemy(
+pub fn move_mobs(
     mut commands: Commands,
     mut player: ResMut<Player>,
-    mut query: Query<(Entity, &mut Transform, &mut Enemy)>,
+    mut query: Query<(Entity, &mut Transform, &mut Mob)>,
     time: Res<Time>,
 ) {
-    for (entity, mut transform, mut enemy) in query.iter_mut() {
+    for (entity, mut transform, mut mob) in query.iter_mut() {
         let current_position = transform.translation.truncate();
-        let direction = ENEMY_PATH[enemy.on_step] - current_position;
+        let direction = MOB_PATH[mob.on_step] - current_position;
         let distance = direction.length();
 
         if distance < 0.5 {
-            enemy.on_step += 1;
-            if enemy.on_step == ENEMY_PATH.len() {
+            mob.on_step += 1;
+            if mob.on_step == MOB_PATH.len() {
                 player.life = player.life.saturating_sub(1);
                 commands.entity(entity).despawn_recursive();
             }
         } else {
             let direction = direction.normalize();
             transform.translation +=
-                (direction * enemy.speed * time.delta_seconds()).extend(0.0);
+                (direction * mob.speed * time.delta_seconds()).extend(0.0);
         }
     }
 }
 
-pub fn ysort_enemies(mut enemy_transforms: Query<&mut Transform, With<Enemy>>) {
-    for mut enemy_transform in enemy_transforms.iter_mut() {
-        enemy_transform.translation.z = enemy_transform.translation.y;
+pub fn ysort_mobs(mut mob_transforms: Query<&mut Transform, With<Mob>>) {
+    for mut mob_transform in mob_transforms.iter_mut() {
+        mob_transform.translation.z = mob_transform.translation.y;
     }
 }
 
-pub fn spawn_enemies_from_spawner(
+pub fn spawn_mobs_from_spawner(
     mut commands: Commands,
     asset_server: Res<AssetServer>,
     texture_atlas_layouts: ResMut<Assets<TextureAtlasLayout>>,
-    mut spawners: Query<(&mut EnemySpawner, &Transform)>,
+    mut spawners: Query<(&mut MobSpawner, &Transform)>,
     time: Res<Time>,
 ) {
     let Ok((mut spawner, transform)) = spawners.get_single_mut() else {
@@ -83,12 +83,12 @@ pub fn spawn_enemies_from_spawner(
             return;
         }
         if spawner.spawn_timer.finished() {
-            spawn_enemy(
+            spawn_mob(
                 &mut commands,
                 &asset_server,
                 texture_atlas_layouts,
                 transform.clone(),
-                get_enemy_config_for_level(spawner.current_level),
+                get_config_for_level(spawner.current_level),
             );
             spawner.spawn_counter += 1;
             spawner.spawn_timer.reset();
@@ -96,11 +96,11 @@ pub fn spawn_enemies_from_spawner(
     }
 }
 
-pub fn init_enemy_spawner(commands: &mut Commands) {
+pub fn init_mob_spawner(commands: &mut Commands) {
     commands.spawn((
         OnGameScreen,
         Transform::from_xyz(5. * 16. + 8., 10. * 16. + 8., 2.),
-        EnemySpawner {
+        MobSpawner {
             spawn_timer: Timer::from_seconds(0.75, TimerMode::Once),
             spawn_counter: 0,
             current_level: 0,
@@ -109,14 +109,14 @@ pub fn init_enemy_spawner(commands: &mut Commands) {
     ));
 }
 
-pub fn spawn_enemy(
+pub fn spawn_mob(
     commands: &mut Commands,
     asset_server: &Res<AssetServer>,
     mut texture_atlas_layouts: ResMut<Assets<TextureAtlasLayout>>,
     transform: Transform,
-    enemy_config: LevelConfig,
+    level_config: LevelConfig,
 ) {
-    let spritesheet = asset_server.load(enemy_config.mob_spritesheet);
+    let spritesheet = asset_server.load(level_config.mob_spritesheet);
     let layout =
         TextureAtlasLayout::from_grid(UVec2::splat(16), 4, 1, None, None);
     let texture_atlas_layout = texture_atlas_layouts.add(layout);
@@ -134,20 +134,20 @@ pub fn spawn_enemy(
         animation_indices,
         AnimationTimer(Timer::from_seconds(0.25, TimerMode::Repeating)),
         OnGameScreen,
-        Enemy {
+        Mob {
             on_step: 0,
-            health: enemy_config.mob_health,
-            speed: enemy_config.mob_speed,
+            health: level_config.mob_health,
+            speed: level_config.mob_speed,
             debufs: Vec::new(),
         },
     ));
 }
 
-pub fn animate_enemy(
+pub fn animate_mobs(
     time: Res<Time>,
     mut query: Query<
         (&AnimationIndices, &mut AnimationTimer, &mut TextureAtlas),
-        With<Enemy>,
+        With<Mob>,
     >,
 ) {
     for (indices, mut timer, mut atlas) in &mut query {

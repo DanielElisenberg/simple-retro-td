@@ -1,4 +1,4 @@
-use crate::game::components::{Bullet, BulletType, Enemy, OnGameScreen};
+use crate::game::components::{Bullet, BulletType, Mob, OnGameScreen};
 use bevy::{
     prelude::{
         Commands, DespawnRecursiveExt, Entity, Query, Res, Transform, Without,
@@ -9,30 +9,29 @@ use bevy::{
 
 pub fn move_bullet_to_target(
     mut commands: Commands,
-    mut bullets: Query<(Entity, &mut Transform, &Bullet), Without<Enemy>>,
-    mut enemies: Query<(Entity, &mut Transform, &mut Enemy)>,
+    mut bullets: Query<(Entity, &mut Transform, &Bullet), Without<Mob>>,
+    mut mobs: Query<(Entity, &mut Transform, &mut Mob)>,
     time: Res<Time>,
 ) {
     for (bullet_e, mut bullet_transform, bullet) in bullets.iter_mut() {
-        if let Ok((enemy_e, enemy_transform, mut enemy)) =
-            enemies.get_mut(bullet.target)
+        if let Ok((mob_e, mob_transform, mut mob)) = mobs.get_mut(bullet.target)
         {
             if bullet_transform.translation.distance(
                 Transform::from_xyz(
-                    enemy_transform.translation.x,
-                    enemy_transform.translation.y,
+                    mob_transform.translation.x,
+                    mob_transform.translation.y,
                     bullet_transform.translation.z,
                 )
                 .translation,
             ) < 8.
             {
                 commands.entity(bullet_e).despawn();
-                enemy.health = enemy.health.saturating_sub(1);
-                if enemy.health == 0 {
-                    commands.entity(enemy_e).despawn_recursive();
+                mob.health = mob.health.saturating_sub(1);
+                if mob.health == 0 {
+                    commands.entity(mob_e).despawn_recursive();
                 }
             } else {
-                let direction = (enemy_transform.translation
+                let direction = (mob_transform.translation
                     - bullet_transform.translation)
                     .normalize();
                 bullet_transform.translation +=
