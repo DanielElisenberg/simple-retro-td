@@ -66,7 +66,7 @@ fn setup_system(
 ) {
     commands.spawn((
         SpriteBundle {
-            texture: asset_server.load("backgrounds/game_screen.png"),
+            texture: asset_server.load("sprites/backgrounds/game_screen.png"),
             transform: Transform::from_xyz(
                 SCREEN_SIZE_X / 2.,
                 SCREEN_SIZE_Y / 2.,

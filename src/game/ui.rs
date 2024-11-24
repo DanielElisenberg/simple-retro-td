@@ -126,14 +126,14 @@ pub fn spawn_ui_entities(
     ));
     commands.spawn((
         SpriteBundle {
-            texture: asset_server.load("heart.png"),
+            texture: asset_server.load("sprites/ui/heart.png"),
             transform: Transform::from_xyz(SCREEN_SIZE_X - 26., 8., 1.),
             ..Default::default()
         },
         Heart,
         OnGameScreen,
     ));
-    let spritesheet = asset_server.load("coin.png");
+    let spritesheet = asset_server.load("sprites/ui/coin.png");
     let layout =
         TextureAtlasLayout::from_grid(UVec2::splat(16), 4, 1, None, None);
     let texture_atlas_layout = texture_atlas_layouts.add(layout);

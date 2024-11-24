@@ -26,7 +26,8 @@ pub fn spawn_tower(
         TowerType::Arrow => {
             commands.spawn((
                 SpriteBundle {
-                    texture: asset_server.load("towers/arrow_tower.png"),
+                    texture: asset_server
+                        .load("sprites/towers/arrow_tower.png"),
                     transform: position,
                     ..Default::default()
                 },
@@ -40,7 +41,8 @@ pub fn spawn_tower(
         TowerType::Cannon => {
             commands.spawn((
                 SpriteBundle {
-                    texture: asset_server.load("towers/cannon_tower.png"),
+                    texture: asset_server
+                        .load("sprites/towers/cannon_tower.png"),
                     transform: position,
                     ..Default::default()
                 },
@@ -52,7 +54,7 @@ pub fn spawn_tower(
             ));
         }
         TowerType::Ice => {
-            let spritesheet = asset_server.load("towers/ice_tower.png");
+            let spritesheet = asset_server.load("sprites/towers/ice_tower.png");
             let layout = TextureAtlasLayout::from_grid(
                 UVec2::splat(16),
                 4,

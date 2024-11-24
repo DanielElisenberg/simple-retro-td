@@ -122,13 +122,13 @@ pub fn spawn_mob(
         },
         animation_indices,
         AnimationTimer(Timer::from_seconds(0.25, TimerMode::Repeating)),
-        OnGameScreen,
         Mob {
             on_step: 0,
             health: level_config.mob_health,
             speed: level_config.mob_speed,
             debufs: Vec::new(),
         },
+        OnGameScreen,
     ));
 }
 

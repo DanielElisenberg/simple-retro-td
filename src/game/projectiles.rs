@@ -57,9 +57,11 @@ pub fn spawn_bullet(
     bullet_type: BulletType,
 ) {
     let texture = asset_server.load(match bullet_type {
-        BulletType::Arrow => "projectiles/arrow_projectile.png",
-        BulletType::Cannonball => "projectiles/cannonball_projectile.png",
-        BulletType::Ice => "projectiles/frost_projectile.png",
+        BulletType::Arrow => "sprites/projectiles/arrow_projectile.png",
+        BulletType::Cannonball => {
+            "sprites/projectiles/cannonball_projectile.png"
+        }
+        BulletType::Ice => "sprites/projectiles/frost_projectile.png",
     });
     commands.spawn((
         SpriteBundle {
