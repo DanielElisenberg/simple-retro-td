@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simple Retro TD</title>
+  <style>
+    body {
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      height: 100vh;
+      background-color: #2c2c2c;
+      color: white;
+      font-family: Arial, sans-serif;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      background-color: #444;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #666;
+    }
+
+    #wasm-container {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Simple Retro TD</h1>
+  <button id="play-button">PLAY</button>
+  <div id="wasm-container"></div>
+
+  <script>
+    const playButton = document.getElementById('play-button');
+    const wasmContainer = document.getElementById('wasm-container');
+
+    playButton.addEventListener('click', async () => {
+      playButton.style.display = 'none';
+
+      try {
+        const {default: init} = await import('./simple-retro-td.js');
+        await init();
+      } catch (err) {
+        console.error("Error loading game:", err);
+      }
+      wasmContainer.style.display = 'block';
+    });
+  </script>
+</body>
+
+</html>
