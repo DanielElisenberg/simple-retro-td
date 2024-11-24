@@ -1,6 +1,6 @@
 use bevy::{
     asset::{AssetServer, Assets},
-    math::{UVec2, Vec2},
+    math::UVec2,
     prelude::{
         default, Commands, DespawnRecursiveExt, Entity, Query, Res, ResMut,
         Transform, With,
@@ -9,27 +9,16 @@ use bevy::{
     time::{Time, Timer, TimerMode},
 };
 
-use crate::game::{
-    components::{
-        AnimationIndices, AnimationTimer, Mob, MobSpawner, OnGameScreen,
+use crate::{
+    constants::MOB_PATH,
+    game::{
+        components::{
+            AnimationIndices, AnimationTimer, Mob, MobSpawner, OnGameScreen,
+        },
+        levels::{get_config_for_level, LevelConfig},
+        resources::Player,
     },
-    levels::{get_config_for_level, LevelConfig},
-    resources::Player,
 };
-
-const MOB_PATH: [Vec2; 11] = [
-    Vec2::new(5. * 16. + 8., 9. * 16. + 8.),
-    Vec2::new(8. * 16. + 8., 9. * 16. + 8.),
-    Vec2::new(8. * 16. + 8., 2. * 16. + 8.),
-    Vec2::new(2. * 16. + 8., 2. * 16. + 8.),
-    Vec2::new(2. * 16. + 8., 4. * 16. + 8.),
-    Vec2::new(5. * 16. + 8., 4. * 16. + 8.),
-    Vec2::new(5. * 16. + 8., 7. * 16. + 8.),
-    Vec2::new(2. * 16. + 8., 7. * 16. + 8.),
-    Vec2::new(2. * 16. + 8., 9. * 16. + 8.),
-    Vec2::new(3. * 16. + 8., 9. * 16. + 8.),
-    Vec2::new(3. * 16. + 8., 10. * 16. + 8.),
-];
 
 pub fn move_mobs(
     mut commands: Commands,

@@ -20,7 +20,7 @@ use bevy::{
 
 use crate::{
     common::despawn_all,
-    constants::{SCREEN_SIZE_X, SCREEN_SIZE_Y},
+    constants::{self, SCREEN_SIZE_X, SCREEN_SIZE_Y},
     game::components::OnGameScreen,
     GameState,
 };
@@ -31,6 +31,9 @@ pub fn plugin(app: &mut App) {
             life: 30,
             money: 30,
         })
+        .insert_resource(resources::BlockList(Vec::from(
+            constants::ALL_PATH_COORDINATES,
+        )))
         .add_systems(
             Update,
             (
