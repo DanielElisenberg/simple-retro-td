@@ -15,15 +15,27 @@ use crate::{
         resources, towers,
     },
 };
+fn play_error_sound(mut commands: Commands, asset_server: &Res<AssetServer>) {
+    commands.spawn(AudioBundle {
+        source: asset_server.load("audio/error.mp3"),
+        settings: PlaybackSettings {
+            mode: PlaybackMode::Once,
+            volume: Volume::new(1.),
+            ..default()
+        },
+    });
+}
 
 pub fn move_selector(
     mut commands: Commands,
     mut block_list: ResMut<resources::BlockList>,
+    mut player: ResMut<resources::Player>,
     texture_atlas_layouts: ResMut<Assets<TextureAtlasLayout>>,
     asset_server: Res<AssetServer>,
     input: Res<ButtonInput<KeyCode>>,
     mut selector_query: Query<&mut Transform, With<Selector>>,
 ) {
+    // move selector
     let selector_transform: &mut Transform =
         &mut selector_query.get_single_mut().unwrap();
     if input.just_pressed(KeyCode::ArrowLeft)
@@ -42,7 +54,10 @@ pub fn move_selector(
         && selector_transform.translation.y > constants::SELECTOR_BOUNDS_Y_MIN
     {
         selector_transform.translation.y -= 16.;
-    } else if (input.just_pressed(KeyCode::KeyI)
+    }
+
+    // guard blocked tiles
+    if (input.just_pressed(KeyCode::KeyI)
         || input.just_pressed(KeyCode::KeyC)
         || input.just_pressed(KeyCode::KeyA))
         && block_list.0.contains(&(
@@ -50,15 +65,17 @@ pub fn move_selector(
             selector_transform.translation.y,
         ))
     {
-        commands.spawn(AudioBundle {
-            source: asset_server.load("audio/error.mp3"),
-            settings: PlaybackSettings {
-                mode: PlaybackMode::Once,
-                volume: Volume::new(1.),
-                ..default()
-            },
-        });
-    } else if input.just_pressed(KeyCode::KeyI) {
+        play_error_sound(commands, &asset_server);
+        return;
+    }
+
+    // build towers
+    if input.just_pressed(KeyCode::KeyI) {
+        if player.money < 20 {
+            play_error_sound(commands, &asset_server);
+            return;
+        }
+        player.money -= 20;
         block_list.0.push((
             selector_transform.translation.x,
             selector_transform.translation.y,
@@ -71,6 +88,11 @@ pub fn move_selector(
             TowerType::Ice,
         );
     } else if input.just_pressed(KeyCode::KeyC) {
+        if player.money < 15 {
+            play_error_sound(commands, &asset_server);
+            return;
+        }
+        player.money -= 15;
         block_list.0.push((
             selector_transform.translation.x,
             selector_transform.translation.y,
@@ -83,6 +105,11 @@ pub fn move_selector(
             TowerType::Cannon,
         );
     } else if input.just_pressed(KeyCode::KeyA) {
+        if player.money < 10 {
+            play_error_sound(commands, &asset_server);
+            return;
+        }
+        player.money -= 10;
         block_list.0.push((
             selector_transform.translation.x,
             selector_transform.translation.y,
