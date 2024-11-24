@@ -130,7 +130,7 @@ pub fn spawn_selector(
 ) {
     commands.spawn((
         SpriteBundle {
-            texture: asset_server.load("selector.png"),
+            texture: asset_server.load("control/selector.png"),
             transform: Transform::from_xyz(
                 SELECTOR_BOUNDS_X_MIN - 8.,
                 SELECTOR_BOUNDS_Y_MIN - 8.,

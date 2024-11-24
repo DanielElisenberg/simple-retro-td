@@ -61,7 +61,7 @@ pub fn plugin(app: &mut App) {
 fn setup_system(mut commands: Commands, asset_server: Res<AssetServer>) {
     commands.spawn((
         SpriteBundle {
-            texture: asset_server.load("game_screen.png"),
+            texture: asset_server.load("backgrounds/game_screen.png"),
             transform: Transform::from_xyz(
                 SCREEN_SIZE_X / 2.,
                 SCREEN_SIZE_Y / 2.,

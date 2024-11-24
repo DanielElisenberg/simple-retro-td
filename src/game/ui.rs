@@ -8,11 +8,10 @@ use crate::{
     },
 };
 use bevy::{
-    asset::Handle,
     color::Color,
     math::Vec3,
-    prelude::{Commands, Query, Res, Transform, With, Without},
-    text::{Font, Text, Text2dBundle, TextStyle},
+    prelude::{Commands, Query, Res, Transform, With},
+    text::{Text, Text2dBundle, TextStyle},
     utils::default,
 };
 
@@ -54,7 +53,7 @@ pub fn spawn_ui_entities(
                 "1",
                 TextStyle {
                     font: asset_server.load("fonts/tiny5/Tiny5-Regular.ttf"),
-                    font_size: 40.0,
+                    font_size: 50.0,
                     color: Color::WHITE,
                     ..default()
                 },
@@ -65,7 +64,7 @@ pub fn spawn_ui_entities(
                     SCREEN_SIZE_Y - 12.,
                     1.,
                 ),
-                scale: Vec3::new(0.25, 0.25, 1.),
+                scale: Vec3::new(0.2, 0.2, 1.),
                 ..Default::default()
             },
             ..Default::default()
@@ -79,7 +78,7 @@ pub fn spawn_ui_entities(
                 "30",
                 TextStyle {
                     font: asset_server.load("fonts/tiny5/Tiny5-Regular.ttf"),
-                    font_size: 40.0,
+                    font_size: 50.0,
                     color: Color::WHITE,
                     ..default()
                 },
@@ -90,7 +89,7 @@ pub fn spawn_ui_entities(
                     10.,
                     1.,
                 ),
-                scale: Vec3::new(0.25, 0.25, 1.),
+                scale: Vec3::new(0.2, 0.2, 1.),
                 ..Default::default()
             },
             ..Default::default()
@@ -104,14 +103,14 @@ pub fn spawn_ui_entities(
                 "30",
                 TextStyle {
                     font: asset_server.load("fonts/tiny5/Tiny5-Regular.ttf"),
-                    font_size: 40.0,
+                    font_size: 50.0,
                     color: Color::WHITE,
                     ..default()
                 },
             ),
             transform: Transform {
                 translation: Vec3::new((SCREEN_SIZE_X / 4.) * 3., 10., 1.),
-                scale: Vec3::new(0.25, 0.25, 1.),
+                scale: Vec3::new(0.2, 0.2, 1.),
                 ..Default::default()
             },
             ..Default::default()
