@@ -68,3 +68,12 @@ pub enum BulletType {
     Cannonball,
     Ice,
 }
+
+#[derive(Component)]
+pub struct LevelText;
+
+#[derive(Component)]
+pub struct HealthText;
+
+#[derive(Component)]
+pub struct MoneyText;

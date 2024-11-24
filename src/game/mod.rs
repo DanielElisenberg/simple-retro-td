@@ -5,6 +5,7 @@ mod mobs;
 mod projectiles;
 mod resources;
 mod towers;
+mod ui;
 
 use bevy::{
     app::{App, Update},
@@ -47,6 +48,7 @@ pub fn plugin(app: &mut App) {
                 towers::animate_towers,
                 towers::shoot_from_tower,
                 projectiles::move_bullet_to_target,
+                ui::update_ui,
             )
                 .run_if(in_state(GameState::Game)),
         )
@@ -81,6 +83,7 @@ fn setup_system(mut commands: Commands, asset_server: Res<AssetServer>) {
         },
         OnGameScreen,
     ));
+    ui::spawn_ui_entities(&mut commands, &asset_server);
 }
 
 fn check_life(
