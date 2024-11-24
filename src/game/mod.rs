@@ -9,19 +9,19 @@ mod ui;
 
 use bevy::{
     app::{App, Update},
-    asset::AssetServer,
+    asset::{AssetServer, Assets},
     audio::{AudioBundle, PlaybackMode, PlaybackSettings},
     input::ButtonInput,
     prelude::{
         default, in_state, Commands, IntoSystemConfigs, KeyCode, NextState,
         OnEnter, OnExit, Res, ResMut, Transform,
     },
-    sprite::SpriteBundle,
+    sprite::{SpriteBundle, TextureAtlasLayout},
 };
 
 use crate::{
     common::despawn_all,
-    constants::{self, SCREEN_SIZE_X, SCREEN_SIZE_Y},
+    constants::{self, ALL_PATH_COORDINATES, SCREEN_SIZE_X, SCREEN_SIZE_Y},
     game::components::OnGameScreen,
     GameState,
 };
@@ -49,6 +49,7 @@ pub fn plugin(app: &mut App) {
                 towers::shoot_from_tower,
                 projectiles::move_bullet_to_target,
                 ui::update_ui,
+                ui::animate_coin,
             )
                 .run_if(in_state(GameState::Game)),
         )
@@ -58,7 +59,11 @@ pub fn plugin(app: &mut App) {
         );
 }
 
-fn setup_system(mut commands: Commands, asset_server: Res<AssetServer>) {
+fn setup_system(
+    mut commands: Commands,
+    texture_atlas_layouts: ResMut<Assets<TextureAtlasLayout>>,
+    asset_server: Res<AssetServer>,
+) {
     commands.spawn((
         SpriteBundle {
             texture: asset_server.load("backgrounds/game_screen.png"),
@@ -83,7 +88,7 @@ fn setup_system(mut commands: Commands, asset_server: Res<AssetServer>) {
         },
         OnGameScreen,
     ));
-    ui::spawn_ui_entities(&mut commands, &asset_server);
+    ui::spawn_ui_entities(&mut commands, texture_atlas_layouts, &asset_server);
 }
 
 fn check_life(
@@ -104,7 +109,11 @@ fn change_scene(
     }
 }
 
-fn cleanup(mut player: ResMut<resources::Player>) {
+fn cleanup(
+    mut player: ResMut<resources::Player>,
+    mut block_list: ResMut<resources::BlockList>,
+) {
     player.life = 30;
     player.money = 30;
+    block_list.0 = Vec::from(ALL_PATH_COORDINATES);
 }

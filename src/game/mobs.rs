@@ -93,7 +93,7 @@ pub fn init_mob_spawner(commands: &mut Commands) {
             spawn_timer: Timer::from_seconds(0.75, TimerMode::Once),
             spawn_counter: 0,
             current_level: 0,
-            level_timer: Timer::from_seconds(30., TimerMode::Once),
+            level_timer: Timer::from_seconds(20., TimerMode::Once),
         },
     ));
 }

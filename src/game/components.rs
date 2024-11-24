@@ -77,3 +77,9 @@ pub struct HealthText;
 
 #[derive(Component)]
 pub struct MoneyText;
+
+#[derive(Component)]
+pub struct Coin;
+
+#[derive(Component)]
+pub struct Heart;

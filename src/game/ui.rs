@@ -8,12 +8,17 @@ use crate::{
     },
 };
 use bevy::{
+    asset::Assets,
     color::Color,
-    math::Vec3,
-    prelude::{Commands, Query, Res, Transform, With},
+    math::{UVec2, Vec3},
+    prelude::{Commands, Query, Res, ResMut, Transform, With},
+    sprite::{SpriteBundle, TextureAtlas, TextureAtlasLayout},
     text::{Text, Text2dBundle, TextStyle},
+    time::{Time, Timer, TimerMode},
     utils::default,
 };
+
+use super::components::{AnimationIndices, AnimationTimer, Coin, Heart};
 
 pub fn update_ui(
     mut text_query: Query<(
@@ -45,6 +50,7 @@ pub fn update_ui(
 
 pub fn spawn_ui_entities(
     commands: &mut Commands,
+    mut texture_atlas_layouts: ResMut<Assets<TextureAtlasLayout>>,
     asset_server: &Res<bevy::asset::AssetServer>,
 ) {
     commands.spawn((
@@ -118,4 +124,56 @@ pub fn spawn_ui_entities(
         MoneyText,
         OnGameScreen,
     ));
+    commands.spawn((
+        SpriteBundle {
+            texture: asset_server.load("heart.png"),
+            transform: Transform::from_xyz(SCREEN_SIZE_X - 26., 8., 1.),
+            ..Default::default()
+        },
+        Heart,
+        OnGameScreen,
+    ));
+    let spritesheet = asset_server.load("coin.png");
+    let layout =
+        TextureAtlasLayout::from_grid(UVec2::splat(16), 4, 1, None, None);
+    let texture_atlas_layout = texture_atlas_layouts.add(layout);
+    let animation_indices = AnimationIndices { first: 0, last: 3 };
+    commands.spawn((
+        SpriteBundle {
+            transform: Transform::from_xyz(
+                (SCREEN_SIZE_X / 4.) * 3. - 16.,
+                10.,
+                1.,
+            ),
+            texture: spritesheet,
+            ..default()
+        },
+        TextureAtlas {
+            layout: texture_atlas_layout,
+            index: animation_indices.first,
+        },
+        animation_indices,
+        AnimationTimer(Timer::from_seconds(0.25, TimerMode::Repeating)),
+        Coin,
+        OnGameScreen,
+    ));
+}
+
+pub fn animate_coin(
+    time: Res<Time>,
+    mut query: Query<
+        (&AnimationIndices, &mut AnimationTimer, &mut TextureAtlas),
+        With<Coin>,
+    >,
+) {
+    for (indices, mut timer, mut atlas) in &mut query {
+        timer.0.tick(time.delta());
+        if timer.0.just_finished() {
+            atlas.index = if atlas.index == indices.last {
+                indices.first
+            } else {
+                atlas.index + 1
+            };
+        }
+    }
 }
