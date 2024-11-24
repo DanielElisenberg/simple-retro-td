@@ -71,13 +71,16 @@ fn setup_system(mut commands: Commands, asset_server: Res<AssetServer>) {
     ));
     control::spawn_selector(&mut commands, &asset_server);
     mobs::init_mob_spawner(&mut commands);
-    commands.spawn(AudioBundle {
-        source: asset_server.load("audio/bg_music.mp3"),
-        settings: PlaybackSettings {
-            mode: PlaybackMode::Loop,
-            ..default()
+    commands.spawn((
+        AudioBundle {
+            source: asset_server.load("audio/bg_music.mp3"),
+            settings: PlaybackSettings {
+                mode: PlaybackMode::Loop,
+                ..default()
+            },
         },
-    });
+        OnGameScreen,
+    ));
 }
 
 fn check_life(

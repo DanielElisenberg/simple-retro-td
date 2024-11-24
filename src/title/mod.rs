@@ -3,10 +3,11 @@ mod components;
 use bevy::{
     app::{App, Update},
     asset::AssetServer,
+    audio::{AudioBundle, PlaybackMode, PlaybackSettings},
     input::ButtonInput,
     prelude::{
-        in_state, Commands, IntoSystemConfigs, KeyCode, NextState, OnEnter,
-        OnExit, Res, ResMut, Transform,
+        default, in_state, Commands, IntoSystemConfigs, KeyCode, NextState,
+        OnEnter, OnExit, Res, ResMut, Transform,
     },
     sprite::SpriteBundle,
 };
@@ -34,6 +35,16 @@ fn setup_system(mut commands: Commands, asset_server: Res<AssetServer>) {
                 0.,
             ),
             ..Default::default()
+        },
+        OnTitleScreen,
+    ));
+    commands.spawn((
+        AudioBundle {
+            source: asset_server.load("audio/title_music.mp3"),
+            settings: PlaybackSettings {
+                mode: PlaybackMode::Loop,
+                ..default()
+            },
         },
         OnTitleScreen,
     ));
