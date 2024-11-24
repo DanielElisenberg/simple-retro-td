@@ -109,7 +109,7 @@ pub fn spawn_mob(
     let layout =
         TextureAtlasLayout::from_grid(UVec2::splat(16), 4, 1, None, None);
     let texture_atlas_layout = texture_atlas_layouts.add(layout);
-    let animation_indices = AnimationIndices { first: 1, last: 3 };
+    let animation_indices = AnimationIndices { first: 0, last: 3 };
     commands.spawn((
         SpriteBundle {
             transform,

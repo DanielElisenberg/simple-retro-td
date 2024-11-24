@@ -1,7 +1,10 @@
 use bevy::{
     asset::{AssetServer, Assets},
+    audio::{AudioBundle, PlaybackMode, PlaybackSettings, Volume},
     input::ButtonInput,
-    prelude::{Commands, KeyCode, Query, Res, ResMut, Transform, With},
+    prelude::{
+        default, Commands, KeyCode, Query, Res, ResMut, Transform, With,
+    },
     sprite::{SpriteBundle, TextureAtlasLayout},
 };
 
@@ -47,7 +50,14 @@ pub fn move_selector(
             selector_transform.translation.y,
         ))
     {
-        return;
+        commands.spawn(AudioBundle {
+            source: asset_server.load("audio/error.mp3"),
+            settings: PlaybackSettings {
+                mode: PlaybackMode::Once,
+                volume: Volume::new(1.),
+                ..default()
+            },
+        });
     } else if input.just_pressed(KeyCode::KeyI) {
         block_list.0.push((
             selector_transform.translation.x,
