@@ -66,7 +66,8 @@ fn setup_system(
 ) {
     commands.spawn((
         SpriteBundle {
-            texture: asset_server.load("sprites/backgrounds/game_screen.png"),
+            texture: asset_server
+                .load("embedded://sprites/backgrounds/game_screen.png"),
             transform: Transform::from_xyz(
                 SCREEN_SIZE_X / 2.,
                 SCREEN_SIZE_Y / 2.,
@@ -80,7 +81,7 @@ fn setup_system(
     mobs::init_mob_spawner(&mut commands);
     commands.spawn((
         AudioBundle {
-            source: asset_server.load("audio/bg_music.mp3"),
+            source: asset_server.load("embedded://audio/bg_music.mp3"),
             settings: PlaybackSettings {
                 mode: PlaybackMode::Loop,
                 ..default()

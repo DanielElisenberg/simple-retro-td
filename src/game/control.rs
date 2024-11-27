@@ -17,7 +17,7 @@ use crate::{
 };
 fn play_error_sound(mut commands: Commands, asset_server: &Res<AssetServer>) {
     commands.spawn(AudioBundle {
-        source: asset_server.load("audio/error.mp3"),
+        source: asset_server.load("embedded://audio/error.mp3"),
         settings: PlaybackSettings {
             mode: PlaybackMode::Once,
             volume: Volume::new(1.),
@@ -130,7 +130,8 @@ pub fn spawn_selector(
 ) {
     commands.spawn((
         SpriteBundle {
-            texture: asset_server.load("sprites/control/selector.png"),
+            texture: asset_server
+                .load("embedded://sprites/control/selector.png"),
             transform: Transform::from_xyz(
                 SELECTOR_BOUNDS_X_MIN - 8.,
                 SELECTOR_BOUNDS_Y_MIN - 8.,

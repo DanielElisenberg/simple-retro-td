@@ -27,7 +27,7 @@ pub fn spawn_tower(
             commands.spawn((
                 SpriteBundle {
                     texture: asset_server
-                        .load("sprites/towers/arrow_tower.png"),
+                        .load("embedded://sprites/towers/arrow_tower.png"),
                     transform: position,
                     ..Default::default()
                 },
@@ -42,7 +42,7 @@ pub fn spawn_tower(
             commands.spawn((
                 SpriteBundle {
                     texture: asset_server
-                        .load("sprites/towers/cannon_tower.png"),
+                        .load("embedded://sprites/towers/cannon_tower.png"),
                     transform: position,
                     ..Default::default()
                 },
@@ -54,7 +54,8 @@ pub fn spawn_tower(
             ));
         }
         TowerType::Ice => {
-            let spritesheet = asset_server.load("sprites/towers/ice_tower.png");
+            let spritesheet =
+                asset_server.load("embedded://sprites/towers/ice_tower.png");
             let layout = TextureAtlasLayout::from_grid(
                 UVec2::splat(16),
                 4,
@@ -142,7 +143,7 @@ pub fn shoot_from_tower(
                     },
                 );
                 commands.spawn(AudioBundle {
-                    source: asset_server.load("audio/fire.mp3"),
+                    source: asset_server.load("embedded://audio/fire.mp3"),
                     settings: PlaybackSettings {
                         mode: PlaybackMode::Once,
                         volume: Volume::new(0.5),

@@ -28,7 +28,8 @@ pub fn plugin(app: &mut App) {
 fn setup_system(mut commands: Commands, asset_server: Res<AssetServer>) {
     commands.spawn((
         SpriteBundle {
-            texture: asset_server.load("sprites/backgrounds/title_screen.png"),
+            texture: asset_server
+                .load("embedded://sprites/backgrounds/title_screen.png"),
             transform: Transform::from_xyz(
                 SCREEN_SIZE_X / 2.,
                 SCREEN_SIZE_Y / 2.,
@@ -40,7 +41,7 @@ fn setup_system(mut commands: Commands, asset_server: Res<AssetServer>) {
     ));
     commands.spawn((
         AudioBundle {
-            source: asset_server.load("audio/title_music.mp3"),
+            source: asset_server.load("embedded://audio/title_music.mp3"),
             settings: PlaybackSettings {
                 mode: PlaybackMode::Loop,
                 ..default()
