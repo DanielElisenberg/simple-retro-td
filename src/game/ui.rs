@@ -58,7 +58,8 @@ pub fn spawn_ui_entities(
             text: Text::from_section(
                 "1",
                 TextStyle {
-                    font: asset_server.load("fonts/tiny5/Tiny5-Regular.ttf"),
+                    font: asset_server
+                        .load("embedded://fonts/tiny5/Tiny5-Regular.ttf"),
                     font_size: 50.0,
                     color: Color::WHITE,
                     ..default()
@@ -83,7 +84,8 @@ pub fn spawn_ui_entities(
             text: Text::from_section(
                 "30",
                 TextStyle {
-                    font: asset_server.load("fonts/tiny5/Tiny5-Regular.ttf"),
+                    font: asset_server
+                        .load("embedded://fonts/tiny5/Tiny5-Regular.ttf"),
                     font_size: 50.0,
                     color: Color::WHITE,
                     ..default()
@@ -108,7 +110,8 @@ pub fn spawn_ui_entities(
             text: Text::from_section(
                 "30",
                 TextStyle {
-                    font: asset_server.load("fonts/tiny5/Tiny5-Regular.ttf"),
+                    font: asset_server
+                        .load("embedded://fonts/tiny5/Tiny5-Regular.ttf"),
                     font_size: 50.0,
                     color: Color::WHITE,
                     ..default()
@@ -126,14 +129,14 @@ pub fn spawn_ui_entities(
     ));
     commands.spawn((
         SpriteBundle {
-            texture: asset_server.load("sprites/ui/heart.png"),
+            texture: asset_server.load("embedded://sprites/ui/heart.png"),
             transform: Transform::from_xyz(SCREEN_SIZE_X - 26., 8., 1.),
             ..Default::default()
         },
         Heart,
         OnGameScreen,
     ));
-    let spritesheet = asset_server.load("sprites/ui/coin.png");
+    let spritesheet = asset_server.load("embedded://sprites/ui/coin.png");
     let layout =
         TextureAtlasLayout::from_grid(UVec2::splat(16), 4, 1, None, None);
     let texture_atlas_layout = texture_atlas_layouts.add(layout);
