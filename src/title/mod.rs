@@ -3,14 +3,14 @@ mod components;
 use bevy::{
     app::{App, Update},
     asset::AssetServer,
-    audio::{AudioBundle, PlaybackMode, PlaybackSettings},
     input::ButtonInput,
     prelude::{
-        default, in_state, Commands, IntoSystemConfigs, KeyCode, NextState,
-        OnEnter, OnExit, Res, ResMut, Transform,
+        in_state, Commands, IntoSystemConfigs, KeyCode, NextState, OnEnter,
+        OnExit, Res, ResMut, Transform,
     },
     sprite::SpriteBundle,
 };
+use bevy_kira_audio::prelude::*;
 
 use crate::{
     common::despawn_all,
@@ -25,7 +25,11 @@ pub fn plugin(app: &mut App) {
         .add_systems(OnExit(GameState::Title), despawn_all::<OnTitleScreen>);
 }
 
-fn setup_system(mut commands: Commands, asset_server: Res<AssetServer>) {
+fn setup_system(
+    mut commands: Commands,
+    asset_server: Res<AssetServer>,
+    audio: Res<Audio>,
+) {
     commands.spawn((
         SpriteBundle {
             texture: asset_server
@@ -39,23 +43,18 @@ fn setup_system(mut commands: Commands, asset_server: Res<AssetServer>) {
         },
         OnTitleScreen,
     ));
-    commands.spawn((
-        AudioBundle {
-            source: asset_server.load("embedded://audio/title_music.mp3"),
-            settings: PlaybackSettings {
-                mode: PlaybackMode::Loop,
-                ..default()
-            },
-        },
-        OnTitleScreen,
-    ));
+    audio
+        .play(asset_server.load("embedded://audio/title_music.ogg"))
+        .looped();
 }
 
 fn change_scene(
     keys: Res<ButtonInput<KeyCode>>,
+    audio: Res<Audio>,
     mut game_state: ResMut<NextState<GameState>>,
 ) {
     if keys.just_pressed(KeyCode::Space) {
+        audio.stop();
         game_state.set(GameState::Game)
     }
 }

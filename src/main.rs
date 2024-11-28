@@ -5,6 +5,7 @@ mod title;
 
 use bevy::prelude::*;
 use bevy_embedded_assets::EmbeddedAssetPlugin;
+use bevy_kira_audio::prelude::*;
 use constants::{
     SCALE, SCALED_SCREEN_SIZE_X, SCALED_SCREEN_SIZE_Y, SCREEN_SIZE_X,
     SCREEN_SIZE_Y,
@@ -38,6 +39,7 @@ fn main() {
                 })
                 .set(ImagePlugin::default_nearest()),
         ))
+        .add_plugins(AudioPlugin)
         .add_systems(Startup, setup)
         .init_state::<GameState>()
         .add_plugins((game::plugin, title::plugin))

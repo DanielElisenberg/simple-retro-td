@@ -1,12 +1,3 @@
-use bevy::{
-    asset::{AssetServer, Assets},
-    audio::{AudioBundle, PlaybackMode, PlaybackSettings, Volume},
-    math::{UVec2, Vec3},
-    prelude::{default, Commands, Entity, Query, Res, ResMut, Transform, With},
-    sprite::{SpriteBundle, TextureAtlas, TextureAtlasLayout},
-    time::{Time, Timer, TimerMode},
-};
-
 use crate::game::{
     components::{
         AnimationIndices, AnimationTimer, BulletType, Mob, OnGameScreen, Tower,
@@ -14,6 +5,14 @@ use crate::game::{
     },
     projectiles,
 };
+use bevy::{
+    asset::{AssetServer, Assets},
+    math::{UVec2, Vec3},
+    prelude::{default, Commands, Entity, Query, Res, ResMut, Transform, With},
+    sprite::{SpriteBundle, TextureAtlas, TextureAtlasLayout},
+    time::{Time, Timer, TimerMode},
+};
+use bevy_kira_audio::prelude::*;
 
 pub fn spawn_tower(
     commands: &mut Commands,
@@ -108,6 +107,7 @@ pub fn animate_towers(
 
 pub fn shoot_from_tower(
     mut commands: Commands,
+    audio: Res<Audio>,
     asset_server: Res<AssetServer>,
     mut towers: Query<(&mut Tower, &Transform), With<Tower>>,
     mobs: Query<(Entity, &Transform), With<Mob>>,
@@ -142,15 +142,8 @@ pub fn shoot_from_tower(
                         TowerType::Ice => BulletType::Ice,
                     },
                 );
-                commands.spawn(AudioBundle {
-                    source: asset_server.load("embedded://audio/fire.mp3"),
-                    settings: PlaybackSettings {
-                        mode: PlaybackMode::Once,
-                        volume: Volume::new(0.5),
-                        ..default()
-                    },
-                });
                 tower.reload.reset();
+                audio.play(asset_server.load("embedded://audio/fire.ogg"));
             }
         }
     }

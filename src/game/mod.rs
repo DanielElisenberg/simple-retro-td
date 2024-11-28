@@ -7,24 +7,23 @@ mod resources;
 mod towers;
 mod ui;
 
-use bevy::{
-    app::{App, Update},
-    asset::{AssetServer, Assets},
-    audio::{AudioBundle, PlaybackMode, PlaybackSettings},
-    input::ButtonInput,
-    prelude::{
-        default, in_state, Commands, IntoSystemConfigs, KeyCode, NextState,
-        OnEnter, OnExit, Res, ResMut, Transform,
-    },
-    sprite::{SpriteBundle, TextureAtlasLayout},
-};
-
 use crate::{
     common::despawn_all,
     constants::{self, ALL_PATH_COORDINATES, SCREEN_SIZE_X, SCREEN_SIZE_Y},
     game::components::OnGameScreen,
     GameState,
 };
+use bevy::{
+    app::{App, Update},
+    asset::{AssetServer, Assets},
+    input::ButtonInput,
+    prelude::{
+        in_state, Commands, IntoSystemConfigs, KeyCode, NextState, OnEnter,
+        OnExit, Res, ResMut, Transform,
+    },
+    sprite::{SpriteBundle, TextureAtlasLayout},
+};
+use bevy_kira_audio::prelude::*;
 
 pub fn plugin(app: &mut App) {
     app.add_systems(OnEnter(GameState::Game), setup_system)
@@ -61,6 +60,7 @@ pub fn plugin(app: &mut App) {
 
 fn setup_system(
     mut commands: Commands,
+    audio: Res<Audio>,
     texture_atlas_layouts: ResMut<Assets<TextureAtlasLayout>>,
     asset_server: Res<AssetServer>,
 ) {
@@ -79,16 +79,9 @@ fn setup_system(
     ));
     control::spawn_selector(&mut commands, &asset_server);
     mobs::init_mob_spawner(&mut commands);
-    commands.spawn((
-        AudioBundle {
-            source: asset_server.load("embedded://audio/bg_music.mp3"),
-            settings: PlaybackSettings {
-                mode: PlaybackMode::Loop,
-                ..default()
-            },
-        },
-        OnGameScreen,
-    ));
+    audio
+        .play(asset_server.load("embedded://audio/bg_music.ogg"))
+        .looped();
     ui::spawn_ui_entities(&mut commands, texture_atlas_layouts, &asset_server);
 }
 
@@ -104,9 +97,11 @@ fn check_life(
 fn change_scene(
     keys: Res<ButtonInput<KeyCode>>,
     mut game_state: ResMut<NextState<GameState>>,
+    audio: Res<Audio>,
 ) {
     if keys.just_pressed(KeyCode::Space) {
-        game_state.set(GameState::Title)
+        game_state.set(GameState::Title);
+        audio.stop();
     }
 }
 

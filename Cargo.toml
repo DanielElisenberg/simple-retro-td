@@ -5,11 +5,11 @@ edition = "2021"
 
 [dependencies]
 bevy_embedded_assets = "0.11.0"
-rand = "0.8.5"
+bevy_kira_audio = "0.20.0"
 
 [dependencies.bevy]
 version = "0.14.0"
-features = ["bevy_asset", "bevy_audio", "bevy_winit", "bevy_core_pipeline", "bevy_sprite", "bevy_text", "bevy_ui", "multi_threaded", "png", "vorbis", "x11", "default_font", "webgl2", "mp3"]
+features = ["bevy_asset", "bevy_winit", "bevy_core_pipeline", "bevy_sprite", "bevy_text", "bevy_ui", "multi_threaded", "png", "vorbis", "x11", "default_font", "webgl2"]
 
 [workspace]
 resolver = "2"

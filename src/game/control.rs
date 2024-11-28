@@ -1,10 +1,7 @@
 use bevy::{
     asset::{AssetServer, Assets},
-    audio::{AudioBundle, PlaybackMode, PlaybackSettings, Volume},
     input::ButtonInput,
-    prelude::{
-        default, Commands, KeyCode, Query, Res, ResMut, Transform, With,
-    },
+    prelude::{Commands, KeyCode, Query, Res, ResMut, Transform, With},
     sprite::{SpriteBundle, TextureAtlasLayout},
 };
 
@@ -15,19 +12,15 @@ use crate::{
         resources, towers,
     },
 };
-fn play_error_sound(mut commands: Commands, asset_server: &Res<AssetServer>) {
-    commands.spawn(AudioBundle {
-        source: asset_server.load("embedded://audio/error.mp3"),
-        settings: PlaybackSettings {
-            mode: PlaybackMode::Once,
-            volume: Volume::new(1.),
-            ..default()
-        },
-    });
+use bevy_kira_audio::prelude::*;
+
+fn play_error_sound(asset_server: &Res<AssetServer>, audio: Res<Audio>) {
+    audio.play(asset_server.load("embedded://audio/error.ogg"));
 }
 
 pub fn move_selector(
     mut commands: Commands,
+    audio: Res<Audio>,
     mut block_list: ResMut<resources::BlockList>,
     mut player: ResMut<resources::Player>,
     texture_atlas_layouts: ResMut<Assets<TextureAtlasLayout>>,
@@ -65,14 +58,14 @@ pub fn move_selector(
             selector_transform.translation.y,
         ))
     {
-        play_error_sound(commands, &asset_server);
+        play_error_sound(&asset_server, audio);
         return;
     }
 
     // build towers
     if input.just_pressed(KeyCode::KeyI) {
         if player.money < 20 {
-            play_error_sound(commands, &asset_server);
+            play_error_sound(&asset_server, audio);
             return;
         }
         player.money -= 20;
@@ -89,7 +82,7 @@ pub fn move_selector(
         );
     } else if input.just_pressed(KeyCode::KeyC) {
         if player.money < 15 {
-            play_error_sound(commands, &asset_server);
+            play_error_sound(&asset_server, audio);
             return;
         }
         player.money -= 15;
@@ -106,7 +99,7 @@ pub fn move_selector(
         );
     } else if input.just_pressed(KeyCode::KeyA) {
         if player.money < 10 {
-            play_error_sound(commands, &asset_server);
+            play_error_sound(&asset_server, audio);
             return;
         }
         player.money -= 10;
