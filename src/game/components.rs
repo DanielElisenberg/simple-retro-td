@@ -63,6 +63,7 @@ pub struct Debuf {
     pub duration: Timer,
 }
 
+#[derive(PartialEq)]
 pub enum BulletType {
     Arrow,
     Cannonball,

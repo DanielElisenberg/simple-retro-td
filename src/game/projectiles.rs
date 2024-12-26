@@ -1,8 +1,12 @@
-use crate::game::components::{Bullet, BulletType, Mob, OnGameScreen};
+use std::time::Duration;
+
+use crate::game::components::{
+    Bullet, BulletType, Debuf, DebufEffect, Mob, OnGameScreen,
+};
 use bevy::{
     prelude::{Commands, Entity, Query, Res, Transform, Without},
     sprite::SpriteBundle,
-    time::Time,
+    time::{Time, Timer, TimerMode},
 };
 
 pub fn move_bullet_to_target(
@@ -24,6 +28,15 @@ pub fn move_bullet_to_target(
             {
                 commands.entity(bullet_e).despawn();
                 mob.health = mob.health.saturating_sub(1);
+                if bullet.bullet_type == BulletType::Ice {
+                    mob.debufs = Vec::from([Debuf {
+                        effect: DebufEffect::Frozen,
+                        duration: Timer::new(
+                            Duration::from_secs(2),
+                            TimerMode::Once,
+                        ),
+                    }]);
+                }
             } else {
                 let direction = (mob_transform.translation
                     - bullet_transform.translation)

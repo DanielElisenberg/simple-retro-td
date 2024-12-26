@@ -44,6 +44,7 @@ pub fn plugin(app: &mut App) {
                 mobs::move_mobs,
                 mobs::spawn_mobs_from_spawner,
                 mobs::animate_mobs,
+                mobs::countdown_debuf,
                 towers::animate_towers,
                 towers::shoot_from_tower,
                 projectiles::move_bullet_to_target,
