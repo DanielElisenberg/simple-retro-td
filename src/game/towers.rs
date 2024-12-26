@@ -47,7 +47,7 @@ pub fn spawn_tower(
                 },
                 Tower {
                     tower_type,
-                    reload: Timer::from_seconds(0.5, TimerMode::Repeating),
+                    reload: Timer::from_seconds(1.1, TimerMode::Repeating),
                 },
                 OnGameScreen,
             ));
@@ -79,7 +79,7 @@ pub fn spawn_tower(
                 OnGameScreen,
                 Tower {
                     tower_type,
-                    reload: Timer::from_seconds(0.5, TimerMode::Repeating),
+                    reload: Timer::from_seconds(0.7, TimerMode::Repeating),
                 },
             ));
         }

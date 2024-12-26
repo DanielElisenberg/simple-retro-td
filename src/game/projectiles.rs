@@ -33,7 +33,7 @@ pub fn move_bullet_to_target(
                         mob.health = mob.health.saturating_sub(2);
                     }
                     BulletType::Cannonball => {
-                        mob.health = mob.health.saturating_sub(1);
+                        mob.health = mob.health.saturating_sub(2);
                         commands.spawn((
                             Transform::from_xyz(
                                 mob_transform.translation.x,
