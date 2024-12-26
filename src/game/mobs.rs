@@ -51,6 +51,19 @@ pub fn ysort_mobs(mut mob_transforms: Query<&mut Transform, With<Mob>>) {
     }
 }
 
+pub fn despawn_mobs(
+    mut commands: Commands,
+    mut player: ResMut<Player>,
+    mob_query: Query<(Entity, &Mob), With<Mob>>,
+) {
+    for (mob_e, mob) in mob_query.iter() {
+        if mob.health == 0 {
+            player.money += 1;
+            commands.entity(mob_e).despawn_recursive();
+        }
+    }
+}
+
 pub fn spawn_mobs_from_spawner(
     mut commands: Commands,
     asset_server: Res<AssetServer>,

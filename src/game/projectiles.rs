@@ -1,26 +1,18 @@
-use crate::game::{
-    components::{Bullet, BulletType, Mob, OnGameScreen},
-    resources,
-};
+use crate::game::components::{Bullet, BulletType, Mob, OnGameScreen};
 use bevy::{
-    prelude::{
-        Commands, DespawnRecursiveExt, Entity, Query, Res, ResMut, Transform,
-        Without,
-    },
+    prelude::{Commands, Entity, Query, Res, Transform, Without},
     sprite::SpriteBundle,
     time::Time,
 };
 
 pub fn move_bullet_to_target(
     mut commands: Commands,
-    mut player: ResMut<resources::Player>,
     mut bullets: Query<(Entity, &mut Transform, &Bullet), Without<Mob>>,
-    mut mobs: Query<(Entity, &mut Transform, &mut Mob)>,
+    mut mobs: Query<(&mut Transform, &mut Mob)>,
     time: Res<Time>,
 ) {
     for (bullet_e, mut bullet_transform, bullet) in bullets.iter_mut() {
-        if let Ok((mob_e, mob_transform, mut mob)) = mobs.get_mut(bullet.target)
-        {
+        if let Ok((mob_transform, mut mob)) = mobs.get_mut(bullet.target) {
             if bullet_transform.translation.distance(
                 Transform::from_xyz(
                     mob_transform.translation.x,
@@ -32,10 +24,6 @@ pub fn move_bullet_to_target(
             {
                 commands.entity(bullet_e).despawn();
                 mob.health = mob.health.saturating_sub(1);
-                if mob.health == 0 {
-                    player.money += 1;
-                    commands.entity(mob_e).despawn_recursive();
-                }
             } else {
                 let direction = (mob_transform.translation
                     - bullet_transform.translation)
