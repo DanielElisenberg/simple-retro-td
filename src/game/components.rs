@@ -52,6 +52,12 @@ pub struct Bullet {
     pub bullet_type: BulletType,
 }
 
+#[derive(Component)]
+pub struct SplashDamage {
+    pub damage: u8,
+    pub target: Entity,
+}
+
 #[derive(PartialEq, Clone, Debug)]
 pub enum DebufEffect {
     Frozen,
@@ -63,6 +69,7 @@ pub struct Debuf {
     pub duration: Timer,
 }
 
+#[derive(PartialEq)]
 pub enum BulletType {
     Arrow,
     Cannonball,

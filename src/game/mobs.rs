@@ -13,7 +13,8 @@ use crate::{
     constants::MOB_PATH,
     game::{
         components::{
-            AnimationIndices, AnimationTimer, Mob, MobSpawner, OnGameScreen,
+            AnimationIndices, AnimationTimer, DebufEffect, Mob, MobSpawner,
+            OnGameScreen,
         },
         levels::{get_config_for_level, LevelConfig},
         resources::Player,
@@ -38,9 +39,14 @@ pub fn move_mobs(
                 commands.entity(entity).despawn_recursive();
             }
         } else {
+            let is_frozen = mob
+                .debufs
+                .iter()
+                .any(|debuf| debuf.effect == DebufEffect::Frozen);
+            let speed = if is_frozen { mob.speed / 2. } else { mob.speed };
             let direction = direction.normalize();
             transform.translation +=
-                (direction * mob.speed * time.delta_seconds()).extend(0.0);
+                (direction * speed * time.delta_seconds()).extend(0.0);
         }
     }
 }
@@ -95,6 +101,22 @@ pub fn spawn_mobs_from_spawner(
             spawner.spawn_counter += 1;
             spawner.spawn_timer.reset();
         }
+    }
+}
+
+pub fn countdown_debuf(mut mob_query: Query<&mut Mob>, time: Res<Time>) {
+    for mut mob in mob_query.iter_mut() {
+        mob.debufs = mob
+            .debufs
+            .iter_mut()
+            .filter_map(|debuf| {
+                if debuf.duration.tick(time.delta()).finished() {
+                    None
+                } else {
+                    Some(debuf.clone())
+                }
+            })
+            .collect();
     }
 }
 
