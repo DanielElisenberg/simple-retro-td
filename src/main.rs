@@ -2,6 +2,7 @@ mod common;
 mod constants;
 mod game;
 mod title;
+mod victory;
 
 use bevy::prelude::*;
 use bevy_embedded_assets::EmbeddedAssetPlugin;
@@ -16,6 +17,7 @@ enum GameState {
     Game,
     #[default]
     Title,
+    Victory,
 }
 
 fn main() {
@@ -42,7 +44,7 @@ fn main() {
         .add_plugins(AudioPlugin)
         .add_systems(Startup, setup)
         .init_state::<GameState>()
-        .add_plugins((game::plugin, title::plugin))
+        .add_plugins((game::plugin, title::plugin, victory::plugin))
         .run();
 }
 

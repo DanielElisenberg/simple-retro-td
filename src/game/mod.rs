@@ -10,7 +10,7 @@ mod ui;
 use crate::{
     common::despawn_all,
     constants::{self, ALL_PATH_COORDINATES, SCREEN_SIZE_X, SCREEN_SIZE_Y},
-    game::components::OnGameScreen,
+    game::components::{MobSpawner, OnGameScreen},
     GameState,
 };
 use bevy::{
@@ -19,7 +19,7 @@ use bevy::{
     input::ButtonInput,
     prelude::{
         in_state, Commands, IntoSystemConfigs, KeyCode, NextState, OnEnter,
-        OnExit, Res, ResMut, Transform,
+        OnExit, Query, Res, ResMut, Transform,
     },
     sprite::{SpriteBundle, TextureAtlasLayout},
 };
@@ -39,6 +39,7 @@ pub fn plugin(app: &mut App) {
             (
                 change_scene,
                 check_life,
+                check_victory,
                 control::move_selector,
                 mobs::ysort_mobs,
                 mobs::move_mobs,
@@ -94,6 +95,18 @@ fn check_life(
 ) {
     if player.life == 0 {
         game_state.set(GameState::Title);
+    }
+}
+
+fn check_victory(
+    mut game_state: ResMut<NextState<GameState>>,
+    spawner_query: Query<&MobSpawner>,
+) {
+    let Ok(spawner) = spawner_query.get_single() else {
+        return;
+    };
+    if spawner.current_level >= 6 {
+        game_state.set(GameState::Victory);
     }
 }
 
