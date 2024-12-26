@@ -1,7 +1,7 @@
 use std::time::Duration;
 
 use crate::game::components::{
-    Bullet, BulletType, Debuf, DebufEffect, Mob, OnGameScreen,
+    Bullet, BulletType, Debuf, DebufEffect, Mob, OnGameScreen, SplashDamage,
 };
 use bevy::{
     prelude::{Commands, Entity, Query, Res, Transform, Without},
@@ -12,11 +12,12 @@ use bevy::{
 pub fn move_bullet_to_target(
     mut commands: Commands,
     mut bullets: Query<(Entity, &mut Transform, &Bullet), Without<Mob>>,
-    mut mobs: Query<(&mut Transform, &mut Mob)>,
+    mut mobs: Query<(Entity, &mut Transform, &mut Mob)>,
     time: Res<Time>,
 ) {
     for (bullet_e, mut bullet_transform, bullet) in bullets.iter_mut() {
-        if let Ok((mob_transform, mut mob)) = mobs.get_mut(bullet.target) {
+        if let Ok((mob_e, mob_transform, mut mob)) = mobs.get_mut(bullet.target)
+        {
             if bullet_transform.translation.distance(
                 Transform::from_xyz(
                     mob_transform.translation.x,
@@ -27,16 +28,36 @@ pub fn move_bullet_to_target(
             ) < 8.
             {
                 commands.entity(bullet_e).despawn();
-                mob.health = mob.health.saturating_sub(1);
-                if bullet.bullet_type == BulletType::Ice {
-                    mob.debufs = Vec::from([Debuf {
-                        effect: DebufEffect::Frozen,
-                        duration: Timer::new(
-                            Duration::from_secs(2),
-                            TimerMode::Once,
-                        ),
-                    }]);
-                }
+                match bullet.bullet_type {
+                    BulletType::Arrow => {
+                        mob.health = mob.health.saturating_sub(2);
+                    }
+                    BulletType::Cannonball => {
+                        mob.health = mob.health.saturating_sub(1);
+                        commands.spawn((
+                            Transform::from_xyz(
+                                mob_transform.translation.x,
+                                mob_transform.translation.y,
+                                bullet_transform.translation.z,
+                            ),
+                            OnGameScreen,
+                            SplashDamage {
+                                damage: 1,
+                                target: mob_e,
+                            },
+                        ));
+                    }
+                    BulletType::Ice => {
+                        mob.health = mob.health.saturating_sub(1);
+                        mob.debufs = Vec::from([Debuf {
+                            effect: DebufEffect::Frozen,
+                            duration: Timer::new(
+                                Duration::from_secs(2),
+                                TimerMode::Once,
+                            ),
+                        }]);
+                    }
+                };
             } else {
                 let direction = (mob_transform.translation
                     - bullet_transform.translation)
@@ -47,6 +68,32 @@ pub fn move_bullet_to_target(
         } else {
             commands.entity(bullet_e).despawn();
         }
+    }
+}
+
+pub fn resolve_splash_damage(
+    mut commands: Commands,
+    mut query: Query<(Entity, &Transform, &SplashDamage), Without<Mob>>,
+    mut mobs: Query<(Entity, &mut Transform, &mut Mob)>,
+) {
+    for (entity, transform, splash_damage) in query.iter_mut() {
+        for (mob_e, mob_transform, mut mob) in mobs.iter_mut() {
+            if mob_e == splash_damage.target {
+                continue;
+            }
+            if transform.translation.distance(
+                Transform::from_xyz(
+                    mob_transform.translation.x,
+                    mob_transform.translation.y,
+                    transform.translation.z,
+                )
+                .translation,
+            ) < 17.
+            {
+                mob.health = mob.health.saturating_sub(splash_damage.damage);
+            }
+        }
+        commands.entity(entity).despawn();
     }
 }
 

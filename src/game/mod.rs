@@ -48,6 +48,7 @@ pub fn plugin(app: &mut App) {
                 towers::animate_towers,
                 towers::shoot_from_tower,
                 projectiles::move_bullet_to_target,
+                projectiles::resolve_splash_damage,
                 mobs::despawn_mobs,
                 ui::update_ui,
                 ui::animate_coin,
