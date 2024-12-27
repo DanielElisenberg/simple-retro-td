@@ -101,12 +101,14 @@ fn check_life(
 fn check_victory(
     mut game_state: ResMut<NextState<GameState>>,
     spawner_query: Query<&MobSpawner>,
+    audio: Res<Audio>,
 ) {
     let Ok(spawner) = spawner_query.get_single() else {
         return;
     };
     if spawner.current_level >= 6 {
         game_state.set(GameState::Victory);
+        audio.stop();
     }
 }
 
